@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load Man System</title>
+    <style>
+        /* Styling from previous code */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #e9ecef;
+        }
+        header {
+            background-color: #343a40;
+            color: white;
+            padding: 1em;
+            text-align: center;
+            position: relative;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+            transition: color 0.3s;
+        }
+        header h1:hover {
+            color: #4CAF50;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #343a40;
+            padding: 0.5em 1em;
+        }
+        nav .logo {
+            font-size: 1.5em;
+            color: white;
+            text-decoration: none;
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            background-color: #343a40;
+        }
+        nav ul.show {
+            display: flex;
+        }
+        nav ul li {
+            margin: 1em 0;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            padding: 0.5em;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            transition: background-color 0.3s;
+        }
+        nav ul li a:hover {
+            background-color: #45a049;
+        }
+        .hamburger {
+            display: block;
+            font-size: 2em;
+            cursor: pointer;
+            color: white;
+        }
+        @media (min-width: 768px) {
+            nav ul {
+                display: flex;
+                flex-direction: row;
+                width: auto;
+            }
+            nav ul li {
+                margin: 0 0.5em;
+            }
+            .hamburger {
+                display: none;
+            }
+        }
+        .fullscreen {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('chicken.png') no-repeat center center;
+            background-size: contain;
+            color: white;
+            text-align: center;
+            position: relative;
+            padding: 0 1em;
+        }
+        .fullscreen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+        .fullscreen h2 {
+            position: relative;
+            z-index: 1;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2.5em;
+            animation: fadeIn 2s ease-in-out;
+            width: 100%;
+            max-width: 600px;
+            line-height: 1.2;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 2em;
+        }
+        .card {
+            display: none;
+            text-align: center;
+            background: white;
+            padding: 1em;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 200px;
+        }
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .name {
+            font-size: 1.5em;
+            margin: 0.5em 0;
+        }
+        .status {
+            font-size: 1.2em;
+            margin: 0.5em 0;
+            padding: 0.5em 1em;
+            border-radius: 5px;
+            color: white;
+        }
+        .available {
+            background-color: #4CAF50;
+        }
+        .unavailable {
+            background-color: #F44336;
+        }
+        .toggle-btn, .logout-btn {
+            display: inline-block;
+            padding: 0.5em 1em;
+            margin-top: 1em;
+            color: white;
+            background-color: #343a40;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .toggle-btn:hover, .logout-btn:hover {
+            background-color: #23272b;
+        }
+        .logout-btn {
+            background-color: #f44336;
+        }
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+         .instagram-icon {
+            margin-top: 0.5em;
+            width: 50px;
+            height: 50px;
+        }
+        /* Contact Section Styling */
+#contact {
+    background-color: #343a40; /* Dark background */
+    color: white; /* White text */
+    padding: 2em;
+    text-align: center;
+    font-family: 'Arial', sans-serif; /* Clean font style */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+}
+
+/* Section Heading Styling */
+#contact h2 {
+    font-size: 2.5em;
+    margin-bottom: 0.5em;
+    text-transform: uppercase;
+    letter-spacing: 2px; /* Space between letters */
+    color: #00bcd4; /* Highlighted color */
+}
+
+/* Paragraph Styling */
+#contact p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin: 0.5em 0;
+}
+
+/* Highlight Effect for Text */
+#contact .hover-effect {
+    color: #ff9800; /* Highlighted text color */
+    font-weight: bold; /* Bold for emphasis */
+    text-decoration: underline; /* Underlined by default */
+    transition: all 0.3s ease; /* Smooth transitions for hover */
+}
+
+/* Hover Effects for Highlighted Text */
+#contact .hover-effect:hover {
+    color: #ffffff; /* Change text color to white */
+    background-color: #00bcd4; /* Highlight background */
+    padding: 0.2em 0.5em; /* Add padding to create a badge effect */
+    border-radius: 4px; /* Rounded corners for hover effect */
+    text-decoration: none; /* Remove underline on hover */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+    #login-form, #admin-login-form {
+        background-color: #ffffff;
+        padding: 2em;
+        margin: 2em auto;
+        width: 90%;
+        max-width: 400px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border-top: 5px solid #4CAF50;
+    }
+
+    #login-form h2, #admin-login-form h2 {
+        color: #343a40;
+        margin-bottom: 1em;
+    }
+
+    #login-form input, #admin-login-form input {
+        width: 80%;
+        padding: 0.8em;
+        margin: 1em 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    #login-form button, #admin-login-form button {
+        padding: 0.8em 2em;
+        color: white;
+        background-color: #4CAF50;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    #login-form button:hover, #admin-login-form button:hover {
+        background-color: #45a049;
+    }
+
+    #admin-dashboard {
+        background-color: #f8f9fa;
+        padding: 2em;
+        margin: 2em auto;
+        width: 90%;
+        max-width: 800px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-top: 5px solid #343a40;
+        display: none;
+    }
+
+    #admin-dashboard h2 {
+        color: #343a40;
+        margin-bottom: 1em;
+    }
+
+    .admin-card {
+        background-color: #ffffff;
+        padding: 1em;
+        margin: 1em;
+        border-radius: 8px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 200px;
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="#" class="logo">Load Man</a>
+            <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+            <ul id="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#Loadman">Loadman</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+        <h1>Load Man System</h1>
+    </header>
+
+    <section id="home" class="fullscreen">
+        <h2>Welcome to Load Man System!</h2>
+    </section>
+
+    <section id="Loadman">
+        <div id="login-form">
+            <h2>Login</h2>
+            <input type="text" id="login-id" placeholder="Enter your ID">
+            <button onclick="login()">Login</button>
+        </div>
+        <div id="admin-login-form">
+            <h2>Admin Login</h2>
+            <input type="text" id="admin-id" placeholder="Enter Admin ID">
+            <button onclick="adminLogin()">Login</button>
+        </div>
+        <div id="admin-dashboard">
+            <h2>Admin Dashboard</h2>
+            <button onclick="adminLogout()" class="logout-btn">Logout</button>
+            <div class="container">
+                <div class="admin-card" data-id="Muthu raja">
+                    <p class="name">Muthu Raja</p>
+                    <p class="status available">Available for Work</p>
+                </div>
+                <div class="admin-card" data-id="Karthik">
+                    <p class="name">Karthik</p>
+                    <p class="status unavailable">Unavailable for Work</p>
+                </div>
+                <div class="admin-card" data-id="Dinesh">
+                    <p class="name">Dinesh</p>
+                    <p class="status available">Available for Work</p>
+                </div>
+                <div class="admin-card" data-id="Arumugam">
+                    <p class="name">Arumugam</p>
+                    <p class="status unavailable">Unavailable for Work</p>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="card" data-id="Muthu raja">
+                <img src="person.png" alt="Loadman 1 Picture" class="profile-pic">
+                <p class="name">Muthu Raja</p>
+                <p class="status available">Available for Work</p>
+                <button class="toggle-btn" onclick="toggleStatus(this)">Toggle Status</button>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+                <a href="https://www.instagram.com/dio_freaker_karthi" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" class="instagram-icon">
+            </a>
+            </div>
+            <div class="card" data-id="Karthik">
+                <img src="person.png" alt="Loadman 2 Picture" class="profile-pic">
+                <p class="name">Karthik</p>
+                <p class="status unavailable">Unavailable for Work</p>
+                <button class="toggle-btn" onclick="toggleStatus(this)">Toggle Status</button>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+                <a href="https://www.instagram.com/_mt_mad_boy_01" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" class="instagram-icon">
+            </a>
+            </div>
+            <div class="card" data-id="Dinesh">
+                <img src="person.png" alt="Loadman 3 Picture" class="profile-pic">
+                <p class="name">Dinesh</p>
+                <p class="status available">Available for Work</p>
+                <button class="toggle-btn" onclick="toggleStatus(this)">Toggle Status</button>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+                <a href="https://www.instagram.com/sakthi___dinesh" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" class="instagram-icon">
+            </a>
+            </div>
+            <div class="card" data-id="Arumugam">
+                <img src="person.png" alt="Loadman 4 Picture" class="profile-pic">
+                <p class="name">Arumugam</p>
+                <p class="status unavailable">Unavailable for Work</p>
+                <button class="toggle-btn" onclick="toggleStatus(this)">Toggle Status</button>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+                <a href="https://www.instagram.com/mr.whity.boy.2t" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" class="instagram-icon">
+            </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <p>Address: <span class="hover-effect">1st Gate Boys, Thoothukudi</span></p>
+        <p>Pincode: <span class="hover-effect">628001</span></p>
+    </section>
+    
+
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('show');
+        }
+
+        function login() {
+            const loginId = document.getElementById('login-id').value;
+            if (loginId) {
+                localStorage.setItem('loggedInUser', loginId);
+                const userCard = document.querySelector(`.card[data-id="${loginId}"]`);
+                if (userCard) {
+                    userCard.style.display = 'block';
+                    document.getElementById('login-form').style.display = 'none';
+                } else {
+                    alert('Invalid Login ID!');
+                }
+            }
+        }
+
+        function adminLogin() {
+            const adminId = document.getElementById('admin-id').value;
+            if (adminId === 'Owner') {
+                document.getElementById('admin-dashboard').style.display = 'block';
+                document.getElementById('admin-login-form').style.display = 'none';
+            } else {
+                alert('Invalid Admin ID!');
+            }
+        }
+
+        function toggleStatus(button) {
+            const card = button.parentElement;
+            const status = card.querySelector('.status');
+            const adminStatus = document.querySelector(`.admin-card[data-id="${card.dataset.id}"] .status`);
+            if (status.classList.contains('available')) {
+                status.classList.remove('available');
+                status.classList.add('unavailable');
+                status.textContent = 'Unavailable for Work';
+                adminStatus.classList.remove('available');
+                adminStatus.classList.add('unavailable');
+                adminStatus.textContent = 'Unavailable for Work';
+            } else {
+                status.classList.remove('unavailable');
+                status.classList.add('available');
+                status.textContent = 'Available for Work';
+                adminStatus.classList.remove('unavailable');
+                adminStatus.classList.add('available');
+                adminStatus.textContent = 'Available for Work';
+            }
+        }
+
+        function logout() {
+            const userId = localStorage.getItem('loggedInUser');
+            if (userId) {
+                localStorage.removeItem('loggedInUser');
+                const userCard = document.querySelector(`.card[data-id="${userId}"]`);
+                if (userCard) userCard.style.display = 'none';
+                document.getElementById('login-form').style.display = 'block';
+            }
+        }
+
+        function adminLogout() {
+            document.getElementById('admin-dashboard').style.display = 'none';
+            document.getElementById('admin-login-form').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
